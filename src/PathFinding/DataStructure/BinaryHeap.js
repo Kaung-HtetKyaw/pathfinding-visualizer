@@ -30,6 +30,10 @@ export default class BinaryHeap {
     return result;
   }
 
+  getLastItem() {
+    return this.content[this.content.length - 1];
+  }
+
   remove(node) {
     let length = this.content.length;
     let nodeValue = this.getScore(node);

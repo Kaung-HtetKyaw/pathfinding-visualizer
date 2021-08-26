@@ -7,11 +7,37 @@
 }
 
 .node-finish {
-  background-color: red;
+  background-image: url("../../../images/circle.svg");
+  /*border: 1px solid rgb(175, 216, 248);*/
+  /*background-color: rgb(255, 254, 106);*/
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: specialNodes;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
 }
 
 .node-start {
-  background-color: green;
+  background-image: url("../../../images/triangle-right.svg");
+  /*border: 1px solid rgb(175, 216, 248);*/
+  /*background-color: rgb(255, 254, 106);*/
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: specialNodes;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
 }
 
 .node-visited {
@@ -23,6 +49,14 @@
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-play-state: running;
+}
+
+.node-visited-no-ani {
+  background-color: rgba(0, 190, 218, 0.75);
+}
+
+.node-shortest-path-no-ani {
+  background-color: rgb(255, 254, 106);
 }
 
 @keyframes visitedAnimation {
@@ -49,6 +83,15 @@
 
 .node-wall {
   background-color: rgb(12, 53, 71);
+  outline: none;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
 }
 
 .node-shortest-path {
@@ -76,5 +119,101 @@
   100% {
     transform: scale(1);
     background-color: rgb(255, 254, 106);
+  }
+}
+
+@keyframes specialNodes {
+  0% {
+    transform: scale(0.3);
+    /*background-color: darkslategrey;*/
+  }
+
+  50% {
+    transform: scale(1.2);
+    /*background-color: darkslategrey;*/
+  }
+
+  100% {
+    transform: scale(1);
+    /*background-color: darkslategrey;*/
+  }
+}
+@keyframes wallAnimation {
+  0% {
+    transform: scale(0.3);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.node-weight {
+  /*border: 1px solid rgb(175, 216, 248);*/
+  background-image: url("../../../images//weight.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: unvisitedWeightAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.node-weight-visited {
+  /*border: 1px solid rgb(175, 216, 248);*/
+  /* background-image: url("../../../images//weight.svg"); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: visitedWeightAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes unvisitedWeightAnimation {
+  0% {
+    transform: scale(0.3);
+    /*background-color: rgb(12, 53, 71);*/
+  }
+
+  50% {
+    transform: scale(1.2);
+    /*background-color: rgb(12, 53, 71);*/
+  }
+
+  100% {
+    transform: scale(1);
+    /*background-color: rgb(12, 53, 71);*/
+  }
+}
+
+@keyframes visitedWeightAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 190, 218, 0.75);
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: rgba(0, 190, 218, 0.75);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgba(0, 190, 218, 0.75);
   }
 }

@@ -1,0 +1,7 @@
+export const prefixNumberWithZero = (num) => {
+  return num < 10 ? `0${num}` : num;
+};
+
+export const convertXYToName = (x, y) => {
+  return `${prefixNumberWithZero(x)}${prefixNumberWithZero(y)}`;
+};

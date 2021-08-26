@@ -1,25 +1,17 @@
-import { isEnd, getFinalPath, getNeighbourNodes } from "./utils";
 import BinaryHeap from "../DataStructure/BinaryHeap";
+import { getFinalPath, getNeighbourNodes, isEnd } from "./utils";
 
-// following implementation is mixed with a little bit of UI logic
-// visitedNodesOrder and shortestNodesOrder are for UI purposes
-// see original impelementation at my repo: https://github.com/Kaung-HtetKyaw/Algorithm-Javascript-Implementation
-// this implementation uses Binary Heap for Priority Queue
-let priorityQueue = new BinaryHeap((x) => x?.g); // binary heap as priority queue
-
-// will reset the node if the grid is used more than once
-export default function dijkstra(grid, start, end) {
+const priorityQueue = new BinaryHeap((x) => x?.f);
+export default function a_star(grid, start, end, heuristics = manhattan_h) {
   let startNode = grid[start.x][start.y];
-
   let openList = priorityQueue;
   let visitedList = [];
   let closedList = [];
-  let numNodes = 0; // num of nodes considered, not really important (for extra information)
   // push to the queue,  add to visited list
-
   openList.push(startNode);
   startNode.visited = true;
   visitedList.push(startNode);
+  let numNodes = 0; // num of nodes considered, not really important (for extra information)
 
   while (openList.size() > 0) {
     // get the shortest node from open list
@@ -42,7 +34,7 @@ export default function dijkstra(grid, start, end) {
     // get neighbour nodes
     let neighbours = getNeighbourNodes(grid, currentNode);
     let neighboursLength = neighbours.length;
-
+    // console.log("current: ", { x: currentNode.x, y: currentNode.y });
     for (let x = 0; x < neighboursLength; x++) {
       let neighbour = neighbours[x];
 
@@ -53,12 +45,13 @@ export default function dijkstra(grid, start, end) {
       // cur to neighbour cost from start node
       let currentG = currentNode.g + (neighbour.weight || 1);
       let visited = neighbour.visited;
-
-      // for first time visiting or current g is smaller than the previous one
+      // for first time visiting, there is no previous g so current g will be the best
       if (!visited || currentG < neighbour.g) {
         neighbour.visited = true;
         neighbour.parent = { x: currentNode.x, y: currentNode.y };
+        neighbour.h = neighbour.h || Math.pow(heuristics(neighbour, end), 2);
         neighbour.g = currentG;
+        neighbour.f = neighbour.g + neighbour.h;
 
         if (!visited) {
           openList.push(neighbour);
@@ -73,15 +66,13 @@ export default function dijkstra(grid, start, end) {
   }
 
   // return empty array if there is no path
-  console.log("exhausted");
-  return {
-    path: [],
-    visitedNodes: visitedList,
-    closedNodes: closedList,
-  };
+
+  return { path: [], visitedNodes: visitedList, closedNodes: closedList };
 }
 
-// function addToVisitedList(visitedList, node) {
-//   visitedList[node.name] = { node, order: visitedNodesCount };
-//   visitedNodesCount++;
-// }
+function manhattan_h(node, end) {
+  let D = 1;
+  let d1 = Math.abs(node.x - end.x);
+  let d2 = Math.abs(node.y - end.y);
+  return D * (d1 + d2);
+}

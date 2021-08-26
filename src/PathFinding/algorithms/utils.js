@@ -1,5 +1,5 @@
 // normalize 2D array to 2D with nodes returned from normalizeNode
-
+import { convertXYToName } from "../../utils/utils";
 export function generateGrid(row, column, start, end, weighted = false) {
   let outerArr = [];
 
@@ -25,14 +25,12 @@ export function generateNode(value, x, y, start, end) {
     closed: false,
     value: value,
     isWall: value === 0,
-    isStart: x === start.x && y === start.y,
-    isEnd: x === end.x && y === end.y,
     parent: null,
     f: 0,
     g: 0,
     h: 0,
-    name: `${x}${y}`,
-    weights: {},
+    name: convertXYToName(x, y),
+    weight: 0,
   };
 }
 
@@ -85,19 +83,28 @@ export function setCostsToNeighbours(grid, currentNode, weighted = false) {
 export function getNeighbourNodes(grid, currentNode) {
   let { x, y } = currentNode;
   let dirs = [
-    [1, 0],
-    [0, 1],
     [-1, 0],
+    [0, 1],
+    [1, 0],
     [0, -1],
+    // [-1, 1],
+    // [1, 1],
+    // [1, -1],
+    // [-1, -1],
   ];
   let result = [];
   // get valid non-wall nodes
   for (let i = 0; i < dirs.length; i++) {
     let dir = dirs[i];
+    let direction = Math.abs(dir[0] + dir[1]);
     let xGrid = grid[x + dir[0]];
     let neighbour = xGrid ? xGrid[y + dir[1]] : undefined;
 
     if (neighbour && !neighbour.isWall) {
+      // if the neighbour is diagonal and unvisited, add extra 0.414
+      if (direction === 2) {
+        neighbour.diagonal = true;
+      }
       result.push(neighbour);
     }
   }
@@ -121,15 +128,24 @@ export function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// will normally return []
+// but, i need low time complexity so i return object, cuz it's O(1) for accessing the node by name
+// downside of this is losing insertion order
+// but i mimic the insertion order by adding index property to each node
 export function getFinalPath(node, grid, start) {
   let result = [];
+
+  let startNode = grid[start.x][start.y];
+
   let cur = node;
   while (cur.parent) {
     result.push(cur);
+
     let { x, y } = cur.parent;
     cur = grid[x][y];
   }
-  result.push(grid[start.x][start.y]);
+  result.push(startNode);
+
   return result.reverse();
 }
 
@@ -138,3 +154,18 @@ export function isEnd(currentNode, end) {
   let { x, y } = end;
   return curX === x && curY === y;
 }
+
+export const resetNodeIfDirty = (node, prevVisited, curVisited) => {
+  const { name } = node;
+  //reset if not visited for cur search yet, but visited last search
+  let isInPrev = prevVisited[name] !== undefined;
+  let isInCur = curVisited[name] !== undefined;
+  if ((isInPrev && !isInCur) || (!isInPrev && !isInCur)) {
+    node.g = 0;
+    node.f = 0;
+    node.visited = false;
+    node.closed = false;
+    node.parent = null;
+  }
+  return node;
+};
