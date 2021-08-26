@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import Node from "./Node/index";
 import { generateGrid } from "../algorithms/utils";
 import {
-  Box,
   Button,
   Center,
   Container,
-  Heading,
   Select,
+  useForceUpdate,
 } from "@chakra-ui/react";
 import dijkstra from "../algorithms/dijkstra";
 import a_star from "../algorithms/a-star";
+import randomMaze from "../../maze/randomMaze";
+import stairCase from "../../maze/stairCase";
+import recursive_division from "../../maze/recursive-division";
 
 const ROW = 20;
 const COL = 50;
@@ -18,10 +20,18 @@ const ALGORITHMS = {
   Dijkstra: { about: "Dijkstra br nyar", algorithm: dijkstra },
   Astar: { about: "A * br nyar", algorithm: a_star },
 };
+const MAZES = {
+  Random: randomMaze,
+  Stair: stairCase,
+  Recursive_Division: recursive_division,
+};
 
 const Visualizer = () => {
+  const forceUpdate = useForceUpdate();
   let [grid, setGrid] = useState([]);
+  let [walls, setWalls] = useState({});
   let [algorithm, setAlgorithm] = useState("Dijkstra");
+  let [maze, setMaze] = useState("Random");
   let [isMousePressed, setIsMousePressed] = useState(false);
   let [isWPressed, setIsWPressed] = useState(false);
   let [isStartSelected, setIsStartSelected] = useState(false);
@@ -97,7 +107,6 @@ const Visualizer = () => {
     }
   };
 
-  const [gridRerenderCount, setGridRerenderCount] = useState(false);
   const toggleWall = (row, col) => {
     // dont let us draw the wall, when grid is dirty
     if (isGridDirty) return;
@@ -107,10 +116,13 @@ const Visualizer = () => {
     if (isWPressed) return;
 
     let node = grid[row][col];
-    grid[row][col] = {
-      ...node,
-      isWall: !node.isWall,
-    };
+    node.isWall = !node.isWall;
+    if (node.isWall) {
+      walls[node.name] = true;
+    } else {
+      walls[node.name] = undefined;
+    }
+
     forceUpdate();
   };
 
@@ -130,10 +142,10 @@ const Visualizer = () => {
     forceUpdate();
   };
 
-  const forceUpdate = () => {
-    // to force re-render when the grid item property change
-    setGridRerenderCount((v) => ++v);
-  };
+  // const forceUpdate = () => {
+  //   // to force re-render when the grid item property change
+  //   setGridRerenderCount((v) => ++v);
+  // };
 
   // visualizing
   const animate = ({ visitedNodes, path, closedNodes }) => {
@@ -201,6 +213,32 @@ const Visualizer = () => {
     setIsGridDirty(true); //* this will force re-render
   };
 
+  const animateWalls = (wallsOrder, walls) => {
+    let length = wallsOrder.length;
+    for (let i = 0; i < length; i++) {
+      let node = wallsOrder[i];
+      setTimeout(() => {
+        if (i === length - 1) {
+          setWalls(walls);
+        }
+        document
+          .getElementById(`node-${node.x}-${node.y}`)
+          .classList.add("node-wall");
+      }, 20 * i);
+    }
+  };
+
+  const generateMaze = () => {
+    let newGrid = grid;
+    setWalls({});
+    if (isGridDirty) {
+      newGrid = generateGrid(ROW, COL, start, end);
+      setGrid(newGrid);
+    }
+    const walls = MAZES[maze](newGrid, start, end);
+    animateWalls(walls.order, walls.walls);
+  };
+
   // recalculate path whenever start or end changes
   useEffect(() => {
     if (isGridDirty) {
@@ -217,7 +255,6 @@ const Visualizer = () => {
     setIsStartSelected(false);
     setIsEndSelected(false);
     setIsWPressed(false);
-    setGridRerenderCount(0);
   };
 
   const isStart = (x, y) => start.x === x && start.y === y;
@@ -230,10 +267,11 @@ const Visualizer = () => {
           return (
             <div style={{ margin: 0, height: "25px" }} key={`row-${rowIndex}`}>
               {row.map((node, nodeIndex) => {
-                const { x, y, isWall, visited, name } = node;
+                const { x, y, visited, name } = node;
                 let isStart = start.x === x && start.y === y;
                 let isEnd = end.x === x && end.y === y;
                 let isWeight = !!node.weight;
+                let isWall = walls[node.name] && node.isWall;
 
                 return (
                   <Node
@@ -278,6 +316,12 @@ const Visualizer = () => {
       maxW="100%"
       minH="100vh"
     >
+      <Button onClick={generateMaze} colorScheme="teal">
+        Random Maze
+      </Button>
+      <Button onClick={() => setWalls({})} colorScheme="teal">
+        Clear Walls
+      </Button>
       <Button onClick={() => visualize()} colorScheme="teal">
         Visualize {algorithm}
       </Button>
@@ -294,6 +338,19 @@ const Visualizer = () => {
         {Object.keys(ALGORITHMS).map((el) => (
           <option key={el} value={el}>
             {el}
+          </option>
+        ))}
+      </Select>
+
+      <Select
+        onChange={(e) => setMaze(e.target.value)}
+        width="200px"
+        defaultValue={maze}
+        colorScheme="teal"
+      >
+        {Object.keys(MAZES).map((el) => (
+          <option key={el} value={el}>
+            {el.split("_").join(" ")}
           </option>
         ))}
       </Select>
