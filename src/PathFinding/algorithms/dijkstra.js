@@ -8,7 +8,7 @@ import BinaryHeap from "../DataStructure/BinaryHeap";
 let priorityQueue = new BinaryHeap((x) => x?.g); // binary heap as priority queue
 
 // will reset the node if the grid is used more than once
-export default function dijkstra(grid, start, end) {
+export default function dijkstra(grid, start, end, walls = {}, weights = {}) {
   let startNode = grid[start.x][start.y];
 
   let openList = priorityQueue;
@@ -40,18 +40,22 @@ export default function dijkstra(grid, start, end) {
     currentNode.closed = true;
 
     // get neighbour nodes
-    let neighbours = getNeighbourNodes(grid, currentNode);
+    let neighbours = getNeighbourNodes(
+      grid,
+      currentNode,
+      walls[currentNode.name]
+    );
     let neighboursLength = neighbours.length;
 
     for (let x = 0; x < neighboursLength; x++) {
       let neighbour = neighbours[x];
 
       // continue to next neighbour if closed or wall
-      if (neighbour.closed || neighbour.isWall) {
+      if (neighbour.closed || walls[neighbour.name]) {
         continue;
       }
       // cur to neighbour cost from start node
-      let currentG = currentNode.g + (neighbour.weight || 1);
+      let currentG = currentNode.g + (weights[neighbour.name] ? 15 : 1);
       let visited = neighbour.visited;
 
       // for first time visiting or current g is smaller than the previous one

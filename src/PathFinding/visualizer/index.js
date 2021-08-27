@@ -8,30 +8,28 @@ import {
   Select,
   useForceUpdate,
 } from "@chakra-ui/react";
+import Header from "../../common/components/Header";
 import dijkstra from "../algorithms/dijkstra";
 import a_star from "../algorithms/a-star";
 import randomMaze from "../../maze/randomMaze";
 import stairCase from "../../maze/stairCase";
 import recursive_division from "../../maze/recursive-division";
+import { SPEED } from "../../utils/constants";
+import ALGORITHMS from "../algorithms";
+import MAZES from "../../maze";
 
 const ROW = 20;
 const COL = 50;
-const ALGORITHMS = {
-  Dijkstra: { about: "Dijkstra br nyar", algorithm: dijkstra },
-  Astar: { about: "A * br nyar", algorithm: a_star },
-};
-const MAZES = {
-  Random: randomMaze,
-  Stair: stairCase,
-  Recursive_Division: recursive_division,
-};
 
 const Visualizer = () => {
   const forceUpdate = useForceUpdate();
+
   let [grid, setGrid] = useState([]);
   let [walls, setWalls] = useState({});
+  let [weights, setWeights] = useState({});
   let [algorithm, setAlgorithm] = useState("Dijkstra");
   let [maze, setMaze] = useState("Random");
+  let [speed, setSpeed] = useState("Normal");
   let [isMousePressed, setIsMousePressed] = useState(false);
   let [isWPressed, setIsWPressed] = useState(false);
   let [isStartSelected, setIsStartSelected] = useState(false);
@@ -39,7 +37,7 @@ const Visualizer = () => {
   let [isGridDirty, setIsGridDirty] = useState(false);
   let [start, setStart] = useState({ x: 10, y: 15 });
   let [end, setEnd] = useState({ x: 10, y: 30 });
-  let [isVisualizing, setIsVisualizing] = useState(false);
+  let [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     setGrid(generateGrid(ROW, COL, start, end));
@@ -47,12 +45,14 @@ const Visualizer = () => {
 
   // wall constructing
   const handleMouseDown = (row, col, event) => {
+    if (animating) return;
     // when mouse is being pressed
     setIsMousePressed(true);
     toggleWall(row, col);
     toggleWeight(row, col, event);
   };
   const handleMouseUp = () => {
+    if (animating) return;
     // when release the mouse
     setIsMousePressed(false);
   };
@@ -68,16 +68,19 @@ const Visualizer = () => {
   }, []);
 
   const handleWDown = (e) => {
+    if (animating) return;
     if (e.key !== "w") return;
     setIsWPressed(true);
   };
 
   const handleWUp = (e) => {
+    if (animating) return;
     if (e.key !== "w") return;
     setIsWPressed(false);
   };
 
   const handleMouseEnter = (row, col, event) => {
+    if (animating) return;
     // when cursor hover the node
     // if being press, draw wall.
     // else do nothing
@@ -87,16 +90,18 @@ const Visualizer = () => {
   };
 
   const relocateStart = (row, col) => {
+    if (animating) return;
     setStart({ x: row, y: col });
     setIsStartSelected(false);
   };
   const relocateEnd = (row, col) => {
+    if (animating) return;
     setEnd({ x: row, y: col });
     setIsEndSelected(false);
   };
 
   const toggleSelectSpecialNode = (isStart, isEnd) => {
-    if (isVisualizing) return;
+    if (animating) return;
     if (isStart) {
       setIsStartSelected((v) => !v);
       setIsEndSelected(false);
@@ -110,18 +115,14 @@ const Visualizer = () => {
   const toggleWall = (row, col) => {
     // dont let us draw the wall, when grid is dirty
     if (isGridDirty) return;
-    if (isVisualizing) return;
+    if (animating) return;
     if (isStartSelected || isEndSelected) return;
     if (isStart(row, col) || isEnd(row, col)) return;
     if (isWPressed) return;
 
     let node = grid[row][col];
-    node.isWall = !node.isWall;
-    if (node.isWall) {
-      walls[node.name] = true;
-    } else {
-      walls[node.name] = undefined;
-    }
+
+    walls[node.name] = !walls[node.name] || undefined;
 
     forceUpdate();
   };
@@ -129,16 +130,13 @@ const Visualizer = () => {
   const toggleWeight = (row, col, event) => {
     // dont let us draw the wall, when grid is dirty
     if (isGridDirty) return;
-    if (isVisualizing) return;
+    if (animating) return;
     if (isStartSelected || isEndSelected) return;
     if (isStart(row, col) || isEnd(row, col)) return;
     if (!isWPressed) return;
 
     let node = grid[row][col];
-    grid[row][col] = {
-      ...node,
-      weight: node.weight ? 0 : 5,
-    };
+    weights[node.name] = !weights[node.name] || 0;
     forceUpdate();
   };
 
@@ -150,7 +148,7 @@ const Visualizer = () => {
   // visualizing
   const animate = ({ visitedNodes, path, closedNodes }) => {
     let length = closedNodes.length;
-    setIsVisualizing(true);
+    setAnimating(true);
     for (let i = 0; i < length; i++) {
       const node = closedNodes[i];
       const isEndNode = node.x === end.x && node.y === end.y;
@@ -158,7 +156,7 @@ const Visualizer = () => {
       if (isEndNode) {
         setTimeout(() => {
           drawPath(path);
-        }, 20 * i);
+        }, SPEED[speed] * i);
         break;
       }
       // animate the visited nodes
@@ -168,7 +166,7 @@ const Visualizer = () => {
           .getElementById(`node-${node.x}-${node.y}`)
           .classList.add("node-visited");
         // draw visited weight
-        if (!!node.weight) {
+        if (weights[node.name]) {
           document
             .getElementById(`node-${node.x}-${node.y}`)
             .classList.add("node-weight-visited");
@@ -183,7 +181,7 @@ const Visualizer = () => {
             .getElementById(`node-${node.x}-${node.y}`)
             .classList.remove("node-shortest-path");
         }, 30);
-      }, 20 * i);
+      }, SPEED[speed] * i);
     }
   };
 
@@ -194,17 +192,40 @@ const Visualizer = () => {
 
       setTimeout(() => {
         if (i === pathLength - 1) {
-          setIsVisualizing(false);
+          setAnimating(false);
         }
-        document
-          .getElementById(`node-${node.x}-${node.y}`)
-          .classList.add("node-shortest-path");
+        if (weights[node.name]) {
+          document
+            .getElementById(`node-${node.x}-${node.y}`)
+            .classList.add("node-weight-shortest-path");
+          document
+            .getElementById(`node-${node.x}-${node.y}`)
+            .classList.add("node-shortest-path");
+        } else {
+          document
+            .getElementById(`node-${node.x}-${node.y}`)
+            .classList.add("node-shortest-path");
+        }
       }, 30 * i);
     }
   };
 
-  const visualize = (newGrid = grid) => {
-    const result = ALGORITHMS[algorithm].algorithm(newGrid, start, end);
+  const visualize = () => {
+    if (animating) return;
+    let newGrid = grid;
+    if (isGridDirty) {
+      newGrid = generateGrid(ROW, COL, start, end);
+      setIsGridDirty(false);
+      setGrid(newGrid);
+    }
+
+    const result = ALGORITHMS[algorithm].algorithm(
+      newGrid,
+      start,
+      end,
+      walls,
+      weights
+    );
     animate({
       visitedNodes: result.visitedNodes,
       path: result.path,
@@ -219,35 +240,52 @@ const Visualizer = () => {
       let node = wallsOrder[i];
       setTimeout(() => {
         if (i === length - 1) {
-          setWalls(walls);
+          setAnimating(false);
+          if (maze === "WeightMaze") {
+            setWeights(walls);
+          } else {
+            setWalls(walls);
+          }
         }
-        document
-          .getElementById(`node-${node.x}-${node.y}`)
-          .classList.add("node-wall");
-      }, 20 * i);
+        if (maze === "WeightMaze") {
+          document
+            .getElementById(`node-${node.x}-${node.y}`)
+            .classList.add("node-weight");
+        } else {
+          document
+            .getElementById(`node-${node.x}-${node.y}`)
+            .classList.add("node-wall");
+        }
+      }, SPEED[speed] * i);
     }
   };
 
   const generateMaze = () => {
+    if (animating) return;
     let newGrid = grid;
     setWalls({});
+    setAnimating(true);
     if (isGridDirty) {
       newGrid = generateGrid(ROW, COL, start, end);
       setGrid(newGrid);
     }
-    const walls = MAZES[maze](newGrid, start, end);
+    const walls = MAZES[maze].algorithm(newGrid, start, end);
     animateWalls(walls.order, walls.walls);
   };
 
   // recalculate path whenever start or end changes
   useEffect(() => {
     if (isGridDirty) {
-      const newGrid = generateGrid(ROW, COL, start, end);
-      visualize(newGrid);
+      setIsGridDirty(false);
+      // const newGrid = generateGrid(ROW, COL, start, end);
+      visualize();
     }
   }, [start, end]);
 
   const resetGrid = () => {
+    if (animating) return;
+    setWalls({});
+    setWeights({});
     setGrid(generateGrid(ROW, COL, start, end));
     // clean up grid
     setIsGridDirty(false);
@@ -270,8 +308,8 @@ const Visualizer = () => {
                 const { x, y, visited, name } = node;
                 let isStart = start.x === x && start.y === y;
                 let isEnd = end.x === x && end.y === y;
-                let isWeight = !!node.weight;
-                let isWall = walls[node.name] && node.isWall;
+                let isWeight = weights[node.name];
+                let isWall = walls[node.name];
 
                 return (
                   <Node
@@ -280,6 +318,7 @@ const Visualizer = () => {
                     y={y}
                     start={start}
                     end={end}
+                    grid={grid}
                     name={name}
                     isWeight={isWeight}
                     isWall={isWall}
@@ -316,44 +355,18 @@ const Visualizer = () => {
       maxW="100%"
       minH="100vh"
     >
-      <Button onClick={generateMaze} colorScheme="teal">
-        Random Maze
-      </Button>
-      <Button onClick={() => setWalls({})} colorScheme="teal">
-        Clear Walls
-      </Button>
-      <Button onClick={() => visualize()} colorScheme="teal">
-        Visualize {algorithm}
-      </Button>
-      <Button onClick={resetGrid} colorScheme="pink">
-        Reset Grid
-      </Button>
-
-      <Select
-        onChange={(e) => setAlgorithm(e.target.value)}
-        width="200px"
-        defaultValue={algorithm}
-        colorScheme="teal"
-      >
-        {Object.keys(ALGORITHMS).map((el) => (
-          <option key={el} value={el}>
-            {el}
-          </option>
-        ))}
-      </Select>
-
-      <Select
-        onChange={(e) => setMaze(e.target.value)}
-        width="200px"
-        defaultValue={maze}
-        colorScheme="teal"
-      >
-        {Object.keys(MAZES).map((el) => (
-          <option key={el} value={el}>
-            {el.split("_").join(" ")}
-          </option>
-        ))}
-      </Select>
+      <Header
+        algorithm={algorithm}
+        setAlgorithm={setAlgorithm}
+        maze={maze}
+        setMaze={setMaze}
+        speed={speed}
+        setSpeed={setSpeed}
+        animating={animating}
+        visualize={visualize}
+        generateMaze={generateMaze}
+        clearBoard={resetGrid}
+      />
 
       <Center
         cursor={`url(${

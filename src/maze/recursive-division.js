@@ -20,19 +20,19 @@ function addOuterWalls(grid) {
   for (let i = 0; i < height; i++) {
     if (i == 0 || i == height - 1) {
       for (let j = 0; j < width; j++) {
-        if (isStart(i, j, start) || isEnd(i, j, end)) {
-          grid[i][j].isWall = true;
-          walls[grid[i][j].name] = true;
-          wallsOrder.push(grid[i][j]);
-        }
+        if (isStart(i, j, start) || isEnd(i, j, end)) return;
+        grid[i][j].isWall = true;
+        walls[grid[i][j].name] = true;
+        wallsOrder.push(grid[i][j]);
       }
     } else {
-      if (!isStart(i, 0, start) || !isEnd(i, 0, end)) {
+      if (!isStart(i, 0, start) && !isEnd(i, 0, end)) {
         grid[i][0].isWall = true;
         walls[grid[i][0].name] = true;
         wallsOrder.push(grid[i][0]);
       }
-      if (isStart(i, width - 1, start) || isEnd(i, width - 1, end)) {
+
+      if (!isStart(i, width - 1, start) && !isEnd(i, width - 1, end)) {
         grid[i][width - 1].isWall = true;
         walls[grid[i][width - 1].name] = true;
         wallsOrder.push(grid[i][width - 1]);

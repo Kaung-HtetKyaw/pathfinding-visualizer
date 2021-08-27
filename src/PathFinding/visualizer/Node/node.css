@@ -105,6 +105,18 @@
   animation-play-state: running;
 }
 
+.node-weight-shortest-path {
+  background-color: rgb(255, 254, 106) !important;
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
 @keyframes shortestPath {
   0% {
     transform: scale(0.6);

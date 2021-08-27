@@ -24,7 +24,6 @@ export function generateNode(value, x, y, start, end) {
     visited: false,
     closed: false,
     value: value,
-    isWall: value === 0,
     parent: null,
     f: 0,
     g: 0,
@@ -80,7 +79,7 @@ export function setCostsToNeighbours(grid, currentNode, weighted = false) {
   }
 }
 
-export function getNeighbourNodes(grid, currentNode) {
+export function getNeighbourNodes(grid, currentNode, isWall) {
   let { x, y } = currentNode;
   let dirs = [
     [-1, 0],
@@ -100,7 +99,7 @@ export function getNeighbourNodes(grid, currentNode) {
     let xGrid = grid[x + dir[0]];
     let neighbour = xGrid ? xGrid[y + dir[1]] : undefined;
 
-    if (neighbour && !neighbour.isWall) {
+    if (neighbour && !isWall) {
       // if the neighbour is diagonal and unvisited, add extra 0.414
       if (direction === 2) {
         neighbour.diagonal = true;

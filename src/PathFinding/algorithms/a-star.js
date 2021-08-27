@@ -2,7 +2,14 @@ import BinaryHeap from "../DataStructure/BinaryHeap";
 import { getFinalPath, getNeighbourNodes, isEnd } from "./utils";
 
 const priorityQueue = new BinaryHeap((x) => x?.f);
-export default function a_star(grid, start, end, heuristics = manhattan_h) {
+export default function a_star(
+  grid,
+  start,
+  end,
+  walls = {},
+  weights = {},
+  heuristics = manhattan_h
+) {
   let startNode = grid[start.x][start.y];
   let openList = priorityQueue;
   let visitedList = [];
@@ -32,24 +39,28 @@ export default function a_star(grid, start, end, heuristics = manhattan_h) {
     currentNode.closed = true;
 
     // get neighbour nodes
-    let neighbours = getNeighbourNodes(grid, currentNode);
+    let neighbours = getNeighbourNodes(
+      grid,
+      currentNode,
+      walls[currentNode.name]
+    );
     let neighboursLength = neighbours.length;
     // console.log("current: ", { x: currentNode.x, y: currentNode.y });
     for (let x = 0; x < neighboursLength; x++) {
       let neighbour = neighbours[x];
 
       // continue to next neighbour if closed or wall
-      if (neighbour.closed || neighbour.isWall) {
+      if (neighbour.closed || walls[neighbour.name]) {
         continue;
       }
       // cur to neighbour cost from start node
-      let currentG = currentNode.g + (neighbour.weight || 1);
+      let currentG = currentNode.g + (weights[neighbour.name] ? 15 : 1);
       let visited = neighbour.visited;
       // for first time visiting, there is no previous g so current g will be the best
       if (!visited || currentG < neighbour.g) {
         neighbour.visited = true;
         neighbour.parent = { x: currentNode.x, y: currentNode.y };
-        neighbour.h = neighbour.h || Math.pow(heuristics(neighbour, end), 2);
+        neighbour.h = neighbour.h || heuristics(neighbour, end);
         neighbour.g = currentG;
         neighbour.f = neighbour.g + neighbour.h;
 

@@ -13,6 +13,7 @@ const Node = ({
   x,
   start,
   end,
+  grid,
   visited,
   isGridDirty,
   isStartSelected,
@@ -64,7 +65,13 @@ const Node = ({
       ref.current.classList.remove("node-shortest-path-no-ani");
       ref.current.classList.remove("node-weight-visited");
     }
-  }, [start, end, isGridDirty, visited]);
+  }, [start, end, isGridDirty, visited, grid]);
+
+  useEffect(() => {
+    if (!isWall && ref.current) {
+      ref.current.classList.remove("node-wall");
+    }
+  }, [isWall]);
 
   const onNodeClick = () => {
     if (isStart || isEnd) {
