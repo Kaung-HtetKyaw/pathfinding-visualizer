@@ -1,0 +1,3 @@
+//! But whenever we need node's value, we will call this function like getScore(node)
+
+//! instead of hard-coding like node.value
