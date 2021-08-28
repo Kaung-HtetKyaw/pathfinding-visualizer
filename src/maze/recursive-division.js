@@ -20,7 +20,7 @@ function addOuterWalls(grid) {
   for (let i = 0; i < height; i++) {
     if (i == 0 || i == height - 1) {
       for (let j = 0; j < width; j++) {
-        if (isStart(i, j, start) || isEnd(i, j, end)) return;
+        if (isStart(i, j, start) || isEnd(i, j, end)) continue;
         grid[i][j].isWall = true;
         walls[grid[i][j].name] = true;
         wallsOrder.push(grid[i][j]);
