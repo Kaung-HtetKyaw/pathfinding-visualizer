@@ -3,6 +3,7 @@ import Node from "./Node/index";
 import { generateGrid } from "../algorithms/utils";
 import { Center, Container, useForceUpdate } from "@chakra-ui/react";
 import Header from "../../common/components/Header";
+import Glossary from "../../common/components/Glossary";
 import { SPEED } from "../../utils/constants";
 import ALGORITHMS from "../algorithms";
 import MAZES from "../../maze";
@@ -125,6 +126,7 @@ const Visualizer = () => {
     if (isStartSelected || isEndSelected) return;
     if (isStart(row, col) || isEnd(row, col)) return;
     if (!isWPressed) return;
+    if (algorithm === "BFS") return;
 
     let node = grid[row][col];
     weights[node.name] = !weights[node.name] || 0;
@@ -217,6 +219,7 @@ const Visualizer = () => {
       walls,
       weights
     );
+
     animate({
       visitedNodes: result.visitedNodes,
       path: result.path,
@@ -253,6 +256,7 @@ const Visualizer = () => {
 
   const generateMaze = () => {
     if (animating) return;
+    if (algorithm === "BFS" && maze === "WeightMaze") return;
     let newGrid = grid;
     setWalls({});
     setAnimating(true);
@@ -358,6 +362,8 @@ const Visualizer = () => {
         generateMaze={generateMaze}
         clearBoard={resetGrid}
       />
+
+      <Glossary />
 
       <Center
         cursor={`url(${

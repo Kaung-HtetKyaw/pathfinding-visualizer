@@ -79,7 +79,7 @@ export function setCostsToNeighbours(grid, currentNode, weighted = false) {
   }
 }
 
-export function getNeighbourNodes(grid, currentNode, isWall) {
+export function getNeighbourNodes(grid, currentNode, walls, isDFS = false) {
   let { x, y } = currentNode;
   let dirs = [
     [-1, 0],
@@ -99,12 +99,16 @@ export function getNeighbourNodes(grid, currentNode, isWall) {
     let xGrid = grid[x + dir[0]];
     let neighbour = xGrid ? xGrid[y + dir[1]] : undefined;
 
-    if (neighbour && !isWall) {
+    if (neighbour && !walls[neighbour.name]) {
       // if the neighbour is diagonal and unvisited, add extra 0.414
       if (direction === 2) {
         neighbour.diagonal = true;
       }
-      result.push(neighbour);
+      if (isDFS) {
+        result.unshift(neighbour);
+      } else {
+        result.push(neighbour);
+      }
     }
   }
 

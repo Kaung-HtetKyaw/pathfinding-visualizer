@@ -40,11 +40,7 @@ export default function dijkstra(grid, start, end, walls = {}, weights = {}) {
     currentNode.closed = true;
 
     // get neighbour nodes
-    let neighbours = getNeighbourNodes(
-      grid,
-      currentNode,
-      walls[currentNode.name]
-    );
+    let neighbours = getNeighbourNodes(grid, currentNode, walls);
     let neighboursLength = neighbours.length;
 
     for (let x = 0; x < neighboursLength; x++) {
@@ -60,11 +56,11 @@ export default function dijkstra(grid, start, end, walls = {}, weights = {}) {
 
       // for first time visiting or current g is smaller than the previous one
       if (!visited || currentG < neighbour.g) {
-        neighbour.visited = true;
         neighbour.parent = { x: currentNode.x, y: currentNode.y };
         neighbour.g = currentG;
 
         if (!visited) {
+          neighbour.visited = true;
           openList.push(neighbour);
           visitedList.push(neighbour);
         } else {
