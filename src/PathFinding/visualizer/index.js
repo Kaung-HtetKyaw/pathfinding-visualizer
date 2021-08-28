@@ -126,7 +126,7 @@ const Visualizer = () => {
     if (isStartSelected || isEndSelected) return;
     if (isStart(row, col) || isEnd(row, col)) return;
     if (!isWPressed) return;
-    if (algorithm === "BFS") return;
+    if (!ALGORITHMS[algorithm].weighted) return;
 
     let node = grid[row][col];
     weights[node.name] = !weights[node.name] || 0;
@@ -256,7 +256,8 @@ const Visualizer = () => {
 
   const generateMaze = () => {
     if (animating) return;
-    if (algorithm === "BFS" && maze === "WeightMaze") return;
+    // dont allow to generate weight maze if algorithm is unweighted
+    if (!ALGORITHMS[algorithm].weighted && maze === "WeightMaze") return;
     let newGrid = grid;
     setWalls({});
     setAnimating(true);
@@ -363,7 +364,7 @@ const Visualizer = () => {
         clearBoard={resetGrid}
       />
 
-      <Glossary />
+      <Glossary algorithm={algorithm} />
 
       <Center
         cursor={`url(${

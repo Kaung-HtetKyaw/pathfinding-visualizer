@@ -37,6 +37,7 @@ const Header = ({
           <HStack>
             <Box>
               <Select
+                isDisabled={animating}
                 onChange={(e) => setAlgorithm(e.target.value)}
                 width="120px"
                 defaultValue={algorithm}
@@ -56,6 +57,7 @@ const Header = ({
               </Select>
             </Box>
             <Select
+              isDisabled={animating}
               onChange={(e) => setMaze(e.target.value)}
               width="170px"
               defaultValue={maze}
@@ -76,6 +78,7 @@ const Header = ({
           </HStack>
           <HStack>
             <Select
+              isDisabled={animating}
               onChange={(e) => setSpeed(e.target.value)}
               width="170px"
               defaultValue={speed}

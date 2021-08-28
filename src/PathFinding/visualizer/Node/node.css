@@ -3,7 +3,11 @@
   height: 100%;
   outline: 1px solid rgb(175, 216, 248);
   display: inline-block;
-  margin: 0 !important;
+}
+
+.strike-through {
+  color: red;
+  text-decoration: line-through;
 }
 
 .node-finish {
