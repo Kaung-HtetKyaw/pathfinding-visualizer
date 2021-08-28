@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Node from "./Node/index";
 import { generateGrid } from "../algorithms/utils";
-import {
-  Button,
-  Center,
-  Container,
-  Select,
-  useForceUpdate,
-} from "@chakra-ui/react";
+import { Center, Container, useForceUpdate } from "@chakra-ui/react";
 import Header from "../../common/components/Header";
-import dijkstra from "../algorithms/dijkstra";
-import a_star from "../algorithms/a-star";
-import randomMaze from "../../maze/randomMaze";
-import stairCase from "../../maze/stairCase";
-import recursive_division from "../../maze/recursive-division";
 import { SPEED } from "../../utils/constants";
 import ALGORITHMS from "../algorithms";
 import MAZES from "../../maze";
+import startNodeImg from "../../images/triangle-right.svg";
+import endNodeImg from "../../images/circle.svg";
 
 const ROW = 20;
 const COL = 50;
@@ -370,11 +361,7 @@ const Visualizer = () => {
 
       <Center
         cursor={`url(${
-          isStartSelected
-            ? "/triangle-right.svg"
-            : isEndSelected
-            ? "/circle.svg"
-            : ""
+          isStartSelected ? startNodeImg : isEndSelected ? endNodeImg : ""
         }),auto`}
         my="5"
       >
