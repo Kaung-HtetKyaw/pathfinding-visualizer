@@ -1,8 +1,8 @@
 # Pathfinding Visualizer
 
-I built this visualizer because i was inspired by Clement Mihailescu's The Projects that got me into google video and I always wanted to implement algorithms and data structures into real life projects.
+I built this visualizer because i was inspired by Clement Mihailescu's [The Projects that got me into google video](https://youtu.be/n4t_-NjY_Sg) and I always wanted to implement algorithms and data structures into real life projects.
 
-> > Binary Heap is used as a Priority Queue for Dijkstra, A\* and Greedy Best First Search.
+> Binary Heap is used as a Priority Queue for Dijkstra, A\* and Greedy Best First Search.
 
 ## The Algorithms
 
@@ -28,6 +28,8 @@ Just simply click on start or end node and the mouse pointer will change to the 
 If the grid is dirty ,i.e. there was a previous visualization, relocating start/end node will re-visualize the selected pathfinding algorithm.
 
 If anyone reading this knows of anything that could make it better, please let me know.
+
+---
 
 The following section is automatically created by CRA(create react app).
 
