@@ -8,10 +8,12 @@ import {
   Heading,
   Select,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import ALGORITHMS from "../../PathFinding/algorithms";
 import MAZES from "../../maze";
 import { SPEED } from "../../utils/constants";
+import Tutorial from "../../Tutorial/index";
 
 const Header = ({
   algorithm = "Dijkstra",
@@ -23,8 +25,11 @@ const Header = ({
   animating,
   visualize,
   generateMaze,
+  bomb,
+  toggleBomb,
   clearBoard,
 }) => {
+  const { onOpen, onClose, isOpen } = useDisclosure({ defaultIsOpen: true });
   return (
     <Container maxW="100%" bg="#34495E" py="6">
       <Box>
@@ -104,7 +109,7 @@ const Header = ({
               colorScheme="teal"
               fontSize="sm"
             >
-              Visualize {algorithm}
+              Visualize {ALGORITHMS[algorithm].name}
             </Button>
             <Button
               isDisabled={animating}
@@ -118,6 +123,14 @@ const Header = ({
           <HStack>
             <Button
               isDisabled={animating}
+              onClick={() => toggleBomb()}
+              colorScheme="blue"
+              fontSize="sm"
+            >
+              {bomb ? "Remove" : "Add"} Bomb
+            </Button>
+            <Button
+              isDisabled={animating}
               onClick={() => clearBoard()}
               fontSize="sm"
               variant="ghost"
@@ -129,6 +142,17 @@ const Header = ({
             >
               Clear Board
             </Button>
+          </HStack>
+          <HStack>
+            <Button
+              isDisabled={animating}
+              onClick={() => onOpen()}
+              colorScheme="blue"
+              fontSize="sm"
+            >
+              Show Tutorial
+            </Button>
+            <Tutorial onClose={onClose} onOpen={onOpen} isOpen={isOpen} />
           </HStack>
         </Stack>
       </Box>

@@ -27,7 +27,7 @@ export default function dijkstra(grid, start, end, walls = {}, weights = {}) {
     closedList.push(currentNode);
     numNodes++;
     // if reach end
-    if (isEnd(currentNode, end)) {
+    if (isEnd(currentNode, end) || (start.x === end.x && start.y === end.y)) {
       const path = getFinalPath(currentNode, grid, start);
       console.log("considered nodes: ", numNodes);
       return {

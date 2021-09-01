@@ -76,8 +76,9 @@ const Glossary = ({ algorithm }) => {
         <Text fontStyle="italic" as="span" fontWeight="bold">
           {" "}
           {ALGORITHMS[algorithm].shortest ? "" : "does not"} guarantee
-        </Text>
-        {ALGORITHMS[algorithm].shortest ? "s" : ""} shortest path
+          {ALGORITHMS[algorithm].shortest ? "s" : ""}
+        </Text>{" "}
+        shortest path
       </Text>
     </Container>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Node from "./Node/index";
-import { generateGrid } from "../algorithms/utils";
+import { generateGrid, randomInteger } from "../algorithms/utils";
 import { Center, Container, useForceUpdate } from "@chakra-ui/react";
 import Header from "../../common/components/Header";
 import Glossary from "../../common/components/Glossary";
@@ -133,18 +133,17 @@ const Visualizer = () => {
     forceUpdate();
   };
 
-  // const forceUpdate = () => {
-  //   // to force re-render when the grid item property change
-  //   setGridRerenderCount((v) => ++v);
-  // };
-
   // visualizing
-  const animate = ({ visitedNodes, path, closedNodes }) => {
+  const animatePathFind = ({ visitedNodes, path, closedNodes }) => {
     let length = closedNodes.length;
     setAnimating(true);
     for (let i = 0; i < length; i++) {
       const node = closedNodes[i];
       const isEndNode = node.x === end.x && node.y === end.y;
+      // if reach end but there is no shortest path
+      if (i === length - 1) {
+        setAnimating(false);
+      }
       // draw path if reach end node
       if (isEndNode) {
         setTimeout(() => {
@@ -220,7 +219,7 @@ const Visualizer = () => {
       weights
     );
 
-    animate({
+    animatePathFind({
       visitedNodes: result.visitedNodes,
       path: result.path,
       closedNodes: result.closedNodes,

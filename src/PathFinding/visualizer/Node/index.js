@@ -65,7 +65,7 @@ const Node = ({
       ref.current.classList.remove("node-shortest-path-no-ani");
       ref.current.classList.remove("node-weight-visited");
     }
-  }, [start, end, isGridDirty, visited, grid]);
+  }, [start, end, isGridDirty, grid]);
 
   useEffect(() => {
     if (!isWall && ref.current) {

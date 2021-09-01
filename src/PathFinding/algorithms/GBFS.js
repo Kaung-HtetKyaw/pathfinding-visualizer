@@ -1,7 +1,9 @@
 import { manhattan_h } from "./heuristics";
 import { isEnd, getFinalPath, getNeighbourNodes } from "./utils";
+import BinaryHeap from "../DataStructure/BinaryHeap";
 
 // object is used for openList because when removing an item , it's time complexity is O(1)
+let priorityQueue = new BinaryHeap((x) => x?.h);
 export default function greedy_best_first_search(
   grid,
   start,
@@ -13,16 +15,18 @@ export default function greedy_best_first_search(
   let startNode = grid[start.x][start.y];
   let visitedList = [];
   let closedList = [];
-  let openList = { [startNode.name]: startNode };
+  let openList = priorityQueue;
+  openList.push(startNode);
   startNode.visited = true;
   visitedList.push(startNode);
 
   let numNodes = 0; // num of nodes considered, not really important (for extra information)
 
-  while (Object.keys(openList).length > 0) {
+  while (openList.size() > 0) {
     // get the shortest node from open list
-    let currentNode = getShortestNode(openList);
+    let currentNode = openList.pop();
     closedList.push(currentNode);
+    currentNode.closed = true;
     numNodes++;
     // if reach end
     if (isEnd(currentNode, end)) {
@@ -30,10 +34,6 @@ export default function greedy_best_first_search(
       console.log("Number of nodes considered: ", numNodes);
       return { path, closedNodes: closedList, visitedNodes: visitedList };
     }
-
-    // remove curretNode from openlist and set the flag to closed cuz currentNode is already considered
-    delete openList[currentNode.name];
-    currentNode.closed = true;
 
     // get neighbour nodes
     let neighbours = getNeighbourNodes(grid, currentNode, walls);
@@ -47,16 +47,21 @@ export default function greedy_best_first_search(
       }
       let currentH =
         heuristics(neighbour, end) + (weights[neighbour.name] ? 15 : 0);
+      let visited = neighbour.visited;
 
-      // for first time visiting, there is no previous g so current g will be the best
-      if (!neighbour.visited || currentH < neighbour.h) {
+      // for first time visiting or current g is smaller than the previous one
+      if (!visited || currentH < neighbour.h) {
         neighbour.parent = { x: currentNode.x, y: currentNode.y };
         neighbour.h = currentH;
 
-        if (!neighbour.visited) {
+        if (!visited) {
           neighbour.visited = true;
-          openList[neighbour.name] = neighbour;
+          openList.push(neighbour);
           visitedList.push(neighbour);
+        } else {
+          // already visited the node, but this time it got smaller g value than the previous one
+          // so we need to reorder the node in priorityQueue
+          openList.reorderNode(neighbour);
         }
       }
     }
