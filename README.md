@@ -1,5 +1,7 @@
 # Pathfinding Visualizer
 
+Try the visualizer here: [https://kaung-htetkyaw.github.io/pathfinding-visualizer/](https://kaung-htetkyaw.github.io/pathfinding-visualizer)
+
 I built this visualizer because i was inspired by Clement Mihailescu's [The Projects that got me into google video](https://youtu.be/n4t_-NjY_Sg) and I always wanted to implement algorithms and data structures into real life projects.
 
 > Binary Heap is used as a Priority Queue for Dijkstra, A\* and Greedy Best First Search.
