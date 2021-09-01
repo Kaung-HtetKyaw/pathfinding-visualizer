@@ -146,7 +146,7 @@ const Header = ({
           <HStack>
             <Button
               isDisabled={animating}
-              onClick={() => clearBoard()}
+              onClick={() => onOpen()}
               fontSize="sm"
               variant="ghost"
               color="white"
