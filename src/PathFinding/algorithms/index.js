@@ -8,7 +8,7 @@ const ALGORITHMS = {
   Dijkstra: {
     name: "Dijkstra",
     about:
-      "is a father of path-finding algorithms and guarantees the shortest path.",
+      "is the father of path-finding algorithms and guarantees the shortest path.",
     algorithm: dijkstra,
     weighted: true,
     shortest: true,
