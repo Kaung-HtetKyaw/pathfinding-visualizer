@@ -146,9 +146,14 @@ const Header = ({
           <HStack>
             <Button
               isDisabled={animating}
-              onClick={() => onOpen()}
-              colorScheme="blue"
+              onClick={() => clearBoard()}
               fontSize="sm"
+              variant="ghost"
+              color="white"
+              _hover={{
+                color: "#34495E",
+                backgroundColor: "white",
+              }}
             >
               Show Tutorial
             </Button>

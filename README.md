@@ -4,6 +4,8 @@ Try the visualizer here: [https://kaung-htetkyaw.github.io/pathfinding-visualize
 
 I built this visualizer because i was inspired by Clement Mihailescu's [The Projects that got me into google video](https://youtu.be/n4t_-NjY_Sg) and I always wanted to implement algorithms and data structures into real life projects.
 
+If you want to see the source code of the more generic versions of algorithms implemented in this porject, you can get it here: [https://github.com/Kaung-HtetKyaw/Algorithm-Javascript-Implementation](https://github.com/Kaung-HtetKyaw/Algorithm-Javascript-Implementation)
+
 > Binary Heap is used as a Priority Queue for Dijkstra, A\* and Greedy Best First Search.
 
 ## The Algorithms
