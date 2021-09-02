@@ -73,7 +73,7 @@ const Tutorial = ({ isOpen, onOpen, onClose }) => {
                 Which algorithms are included in this application ?
               </Text>
               {Object.values(ALGORITHMS).map((el) => (
-                <Text mb={2} as="li" fontSize="17px">
+                <Text key={el.name} mb={2} as="li" fontSize="17px">
                   <Text as="span" display="inline-block" fontWeight="bold">
                     {el.name}
                   </Text>{" "}

@@ -10,12 +10,11 @@ import MAZES from "../../maze";
 import startNodeImg from "../../images/triangle-right.svg";
 import endNodeImg from "../../images/circle.svg";
 
-const ROW = 20;
-const COL = 50;
-
 const Visualizer = () => {
   const forceUpdate = useForceUpdate();
 
+  let [COL, setROW] = useState(0);
+  let [ROW, setCOL] = useState(0);
   let [grid, setGrid] = useState([]);
   let [walls, setWalls] = useState({});
   let [weights, setWeights] = useState({});
@@ -32,7 +31,15 @@ const Visualizer = () => {
   let [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    setGrid(generateGrid(ROW, COL, start, end));
+    let width = window.innerWidth;
+
+    let percentage = width <= 400 ? 0.6 : 0.9;
+    let col = Math.round((width * percentage) / 25);
+    let row = 20;
+    console.log(row, col);
+    setROW(row);
+    setCOL(col);
+    setGrid(generateGrid(row, col, start, end));
   }, []);
 
   // wall constructing

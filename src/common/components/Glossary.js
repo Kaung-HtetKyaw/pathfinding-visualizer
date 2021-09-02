@@ -48,9 +48,9 @@ const Glossary = ({ algorithm }) => {
           </HStack>
         ))}
       </Flex>
-      <Flex mt={3}>
+      <Flex flexDirection={{ base: "column", lg: "row" }} mt={3}>
         {otherNodes.map((node) => (
-          <HStack px={5} key={node.name}>
+          <HStack px={5} py={{ base: "3", lg: "0" }} key={node.name}>
             {node.color.map((el) => (
               <Box
                 key={el}
