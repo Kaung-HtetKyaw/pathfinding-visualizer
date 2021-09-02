@@ -1,19 +1,15 @@
 import React from "react";
 import {
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
   Text,
   Box,
   HStack,
   Icon,
-  Divider,
-  color,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import ALGORITHMS from "../PathFinding/algorithms/index";

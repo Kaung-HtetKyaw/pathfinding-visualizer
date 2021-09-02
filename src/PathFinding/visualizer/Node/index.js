@@ -27,7 +27,6 @@ const Node = ({
   relocateEnd,
 }) => {
   const ref = createRef();
-  let [debouncedDirty, setDebouncedDirty] = useState(false);
 
   let extraClassName = isEnd
     ? "node-finish"

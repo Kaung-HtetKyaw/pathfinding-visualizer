@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Container,
-  Heading,
-  Image,
-  Box,
-  HStack,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
+import { Container, Image, Box, HStack, Flex, Text } from "@chakra-ui/react";
 import startNodeimg from "../../images/triangle-right.svg";
 import endNodeImg from "../../images/circle.svg";
 import weightNodeImg from "../../images/weight.svg";

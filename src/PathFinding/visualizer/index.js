@@ -26,20 +26,29 @@ const Visualizer = () => {
   let [isStartSelected, setIsStartSelected] = useState(false);
   let [isEndSelected, setIsEndSelected] = useState(false);
   let [isGridDirty, setIsGridDirty] = useState(false);
-  let [start, setStart] = useState({ x: 10, y: 15 });
-  let [end, setEnd] = useState({ x: 10, y: 30 });
+  let [start, setStart] = useState({ x: 0, y: 0 });
+  let [end, setEnd] = useState({ x: 5, y: 5 });
   let [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     let width = window.innerWidth;
-
-    let percentage = width <= 400 ? 0.6 : 0.9;
+    let percentage = width <= 400 ? 0.8 : 0.9;
     let col = Math.round((width * percentage) / 25);
     let row = 20;
-    console.log(row, col);
+    let startNode = {
+      x: randomInteger(0, row / 2),
+      y: randomInteger(0, col / 2),
+    };
+    let endNode = {
+      x: randomInteger(0, row - 1),
+      y: randomInteger(0, col - 1),
+    };
+
     setROW(row);
     setCOL(col);
-    setGrid(generateGrid(row, col, start, end));
+    setStart(startNode);
+    setEnd(endNode);
+    setGrid(generateGrid(row, col, startNode, endNode));
   }, []);
 
   // wall constructing
