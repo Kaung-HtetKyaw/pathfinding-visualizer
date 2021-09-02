@@ -13,8 +13,8 @@ import endNodeImg from "../../images/circle.svg";
 const Visualizer = () => {
   const forceUpdate = useForceUpdate();
 
-  let [COL, setROW] = useState(0);
-  let [ROW, setCOL] = useState(0);
+  let [COL, setCOL] = useState(0);
+  let [ROW, setROW] = useState(0);
   let [grid, setGrid] = useState([]);
   let [walls, setWalls] = useState({});
   let [weights, setWeights] = useState({});
@@ -297,6 +297,7 @@ const Visualizer = () => {
     if (animating) return;
     setWalls({});
     setWeights({});
+    console.log(ROW, COL);
     setGrid(generateGrid(ROW, COL, start, end));
     // clean up grid
     setIsGridDirty(false);
