@@ -38,6 +38,7 @@ const Tutorial = ({ isOpen, onOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent
         pb={5}
+        mb={6}
         display="flex"
         flexDir="column"
         justifyContent="center"
