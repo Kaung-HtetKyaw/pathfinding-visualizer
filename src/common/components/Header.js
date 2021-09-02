@@ -122,14 +122,6 @@ const Header = ({
           <HStack>
             <Button
               isDisabled={animating}
-              onClick={() => toggleBomb()}
-              colorScheme="blue"
-              fontSize="sm"
-            >
-              {bomb ? "Remove" : "Add"} Bomb
-            </Button>
-            <Button
-              isDisabled={animating}
               onClick={() => clearBoard()}
               fontSize="sm"
               variant="ghost"

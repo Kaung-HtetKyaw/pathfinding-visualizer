@@ -10,28 +10,29 @@ If you want to see the source code of the more generic versions of algorithms im
 
 ## The Algorithms
 
-**Dijkstra** Algorithm (weighted): the father of path-finding algorithms and guarantees the shortest path.
+- **Dijkstra** Algorithm (weighted): the father of path-finding algorithms and guarantees the shortest path.
 
-**A Star** Search (weighted): arguably the best path-finding algorithm. It combines the pieces of information that Dijkstra’s Algorithm uses (favoring vertices that are close to the starting point) and heuristics(estimated distance from the node's current positon to goal). It is faster than Dijkstra and guarantees shortest path.
+- **A Star** Search (weighted): arguably the best path-finding algorithm. It combines the pieces of information that Dijkstra’s Algorithm uses (favoring vertices that are close to the starting point) and heuristics(estimated distance from the node's current positon to goal). It is faster than Dijkstra and guarantees shortest path.
 
-**Breadth First Search** (unweighted): a graph traversal algorithm that starts traversing the graph from root node and explores all the neighbouring nodes. It is slower than both Dijkstra and A\* but guarantees shortest path.
+- **Breadth First Search** (unweighted): a graph traversal algorithm that starts traversing the graph from root node and explores all the neighbouring nodes. It is slower than both Dijkstra and A\* but guarantees shortest path.
 
-**Greedy Best First Search** (weighted): is like A* but it only uses heuristics to search to find the goal. It is faster than A*, Dijkstra, Breadth First Search but does not guarantee shortest path.
+- **Greedy Best First Search** (weighted): is like A* but it only uses heuristics to search to find the goal. It is faster than A*, Dijkstra, Breadth First Search but does not guarantee shortest path.
 
-**Depth First Search** (unweighted): starts at the root node (selecting some arbitrary node as the root node in the case of a graph) and explores as far as possible along each branch before backtracking. It is slower than all of the above algorithms and does not guarantee shortest path.
+- **Depth First Search** (unweighted): starts at the root node (selecting some arbitrary node as the root node in the case of a graph) and explores as far as possible along each branch before backtracking. It is slower than all of the above algorithms and does not guarantee shortest path.
 
 ## How to add walls and weights
 
-Click on the grid to add a wall. Click on the grid while pressing W to add a weight.
-You can also generate maze and pattern by selecting from the dropdown and click generate Generate Maze button.
-Walls are impenetrable, meaning that a path cannot cross through them. Weights, however, are not impassable. They are simply more "costly" to move through. In this application, moving through a weight node has a "cost" of 15.
+- Click on the grid to add a wall.
+- Click on the grid while pressing W to add a weight.
+- You can also generate maze and pattern by selecting from the dropdown and click generate Generate Maze button.
+- Walls are impenetrable, meaning that a path cannot cross through them. Weights, however, are not impassable. They are simply more "costly" to move through. In this application, moving through a weight node has a "cost" of 15.
 
 ## How to relocate start and end nodes
 
-Just simply click on start or end node and the mouse pointer will change to the icon of node you clicked on (start or end) and then just simpley click on the node you want start/end node to be at.
-If the grid is dirty ,i.e. there was a previous visualization, relocating start/end node will re-visualize the selected pathfinding algorithm.
+- Just simply click on start or end node and the mouse pointer will change to the icon of node you clicked on (start or end) and then just simpley click on the node you want start/end node to be at.
+- If the grid is dirty ,i.e. there was a previous visualization, relocating start/end node will re-visualize the selected pathfinding algorithm.
 
-If anyone reading this knows of anything that could make it better, please let me know.
+#### If anyone reading this knows of anything that could make it better, please let me know.
 
 ---
 
